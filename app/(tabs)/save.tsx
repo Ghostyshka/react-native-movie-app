@@ -24,18 +24,10 @@ const Save = () => {
               <MovieCard
                 id={item.movie_id}
                 title={item.title}
-                poster_path={item.poster_url}
-                adult={item.adult}
-                backdrop_path={item.backdrop_path}
-                genre_ids={item.genre_ids}
-                original_language={item.original_language}
-                original_title={item.original_title}
-                overview={item.overview}
-                popularity={item.popularity}
-                release_date={item.release_date}
-                video={item.video}
-                vote_average={item.vote_average}
-                vote_count={item.vote_count}
+                poster_url={item.poster_url}
+                rating={item.rating}
+                genre={item.genre}
+                description={item.description}
               />
             )}
             keyExtractor={(item) => item.id}
