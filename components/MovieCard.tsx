@@ -1,4 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 interface MovieCardProps {
   id: number;
@@ -8,6 +9,7 @@ interface MovieCardProps {
   rating: number;
   description: string;
   ratingColor?: string;
+  trailer_url?: string;
 }
 
 const MovieCard = ({
@@ -19,8 +21,13 @@ const MovieCard = ({
   description,
   ratingColor = "#02F3E9",
 }: MovieCardProps) => {
+  const router = useRouter();
+
   return (
-    <TouchableOpacity className="w-[100px] mb-2 mr-2">
+    <TouchableOpacity
+      className="w-[100px] mb-2 mr-2"
+      onPress={() => router.push(`/movie/${id}`)}
+    >
       <View className="rounded-lg overflow-hidden bg-purple-dark">
         <Image
           source={{ uri: poster_url }}

@@ -56,12 +56,12 @@ const Index = () => {
               )}
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ gap: 12, paddingHorizontal: 2 }}
+              contentContainerStyle={{ gap: 5, paddingHorizontal: 1 }}
             />
           </View>
         </View>
 
-        <Text className="text-light-200 text-lg font-bold mb-4">
+        <Text className="text-accent text-light-200 text-lg font-bold mb-4">
           All Movies
         </Text>
         <FlatList
@@ -81,8 +81,9 @@ const Index = () => {
           numColumns={3}
           columnWrapperStyle={{
             justifyContent: "flex-start",
-            gap: 16,
-            marginBottom: 16,
+            gap: 20,
+            marginBottom: 5,
+            marginTop: 5,
           }}
           contentContainerStyle={{ paddingBottom: 40 }}
           scrollEnabled={false}

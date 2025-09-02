@@ -2,31 +2,16 @@ import {
   View,
   Text,
   Image,
-  ActivityIndicator,
   ScrollView,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { movies } from "@/data/movies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { icons } from "@/constants/icons";
-import { movies } from "@/data/movies"; 
-
-interface MovieInfoProps {
-  label: string;
-  value?: string | number | null;
-}
-
-const MovieInfo = ({ label, value }: MovieInfoProps) => (
-  <View className="flex-col items-start justify-center mt-5">
-    <Text className="text-light-200 font-normal text-sm">{label}</Text>
-    <Text className="text-light-100 font-bold text-sm mt-2">
-      {value || "N/A"}
-    </Text>
-  </View>
-);
-
-const Details = () => {
+const MovieDetails = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
@@ -39,60 +24,91 @@ const Details = () => {
       </SafeAreaView>
     );
 
-  return (
-    <View className="bg-primary flex-1">
-      <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-        <View>
-          <Image
-            source={{
-              uri: movie.poster_url,
-            }}
-            className="w-full h-[550px]"
-            resizeMode="stretch"
-          />
+  const handleSave = async () => {
+    let saved = await AsyncStorage.getItem("saved_movies");
+    let savedMovies = saved ? JSON.parse(saved) : [];
 
-          <TouchableOpacity className="absolute bottom-5 right-5 rounded-full size-14 bg-white flex items-center justify-center">
-            <Image
-              source={icons.play}
-              className="w-6 h-7 ml-1"
-              resizeMode="stretch"
-            />
-          </TouchableOpacity>
+    if (savedMovies.find((m: any) => m.id === movie.id)) {
+      savedMovies = savedMovies.filter((m: any) => m.id !== movie.id);
+    } else {
+      savedMovies.push(movie);
+    }
+
+    await AsyncStorage.setItem("saved_movies", JSON.stringify(savedMovies));
+  };
+
+  const handleTrailer = () => {
+    if (movie.trailer_url) {
+      Linking.openURL(movie.trailer_url);
+    } else {
+      alert("Trailer not available");
+    }
+  };
+
+return (
+  <SafeAreaView className="flex-1 bg-primary">
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 160 }}
+    >
+      {/* Poster */}
+      <Image
+        source={{ uri: movie.poster_url }}
+        className="w-full h-[500px] rounded-xl"
+        resizeMode="cover"
+      />
+
+      {/* Info */}
+      <View className="px-5 mt-6">
+        <Text className="text-accent text-2xl font-bold">{movie.title}</Text>
+
+        {/* Genre, Rating & Year */}
+        <View className="flex-row items-center gap-3 mt-2">
+          <View className="bg-gray-200 px-3 py-1 rounded-full">
+            <Text className="text-black text-sm">{movie.genre}</Text>
+          </View>
+          <View className="bg-purple-dark px-3 py-1 rounded-full flex-row items-center gap-1">
+            <Text className="text-accent text-sm font-bold">{movie.rating}</Text>
+            <Text className="text-yellow-400 text-sm">★</Text>
+          </View>
+          <View className="bg-gray-200 px-3 py-1 rounded-full">
+            <Text className="text-black text-sm">{movie.year}</Text>
+          </View>
         </View>
 
-        <View className="flex-col items-start justify-center mt-5 px-5">
-          <Text className="text-white font-bold text-xl">{movie.title}</Text>
-          <View className="flex-row items-center gap-x-1 mt-2">
-            <Text className="text-light-200 text-sm">
-              {movie.year} {/* Рік */}
-            </Text>
-          </View>
+        {/* Description */}
+        <Text className="text-white text-base mt-4 leading-6">
+          {movie.description}
+        </Text>
+      </View>
+    </ScrollView>
 
-          <View className="flex-row items-center bg-purple-dark px-2 py-1 rounded-md gap-x-1 mt-2">
-            <Image source={icons.star} className="size-4" />
-
-            <Text className="text-white font-bold text-sm">
-              {movie.rating}/10
-            </Text>
-          </View>
-
-          <MovieInfo label="Genre" value={movie.genre} />
-        </View>
-      </ScrollView>
+    {/* Bottom Buttons */}
+    <View className="flex-row justify-between px-5 gap-3 py-3 bg-primary">
+      <TouchableOpacity
+        className="flex-1 bg-accent rounded-xl py-3.5 items-center"
+        onPress={handleSave}
+      >
+        <Text className="text-white font-bold text-base">Save</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
-        className="absolute bottom-5 left-0 right-0 mx-5 bg-accent rounded-lg py-3.5 flex flex-row items-center justify-center z-50"
+        className="flex-1 bg-purple-dark rounded-xl py-3.5 items-center"
+        onPress={handleTrailer}
+      >
+        <Text className="text-white font-bold text-base">Watch Trailer</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        className="flex-1 bg-gray-600 rounded-xl py-3.5 items-center"
         onPress={router.back}
       >
-        <Image
-          source={icons.arrow}
-          className="size-5 mr-1 mt-0.5 rotate-180"
-          tintColor="#fff"
-        />
-        <Text className="text-white font-semibold text-base">Go Back</Text>
+        <Text className="text-white font-bold text-base">Go Back</Text>
       </TouchableOpacity>
     </View>
-  );
+  </SafeAreaView>
+);
+
 };
 
-export default Details;
+export default MovieDetails;
