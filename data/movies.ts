@@ -54,4 +54,40 @@ export const movies: Movie[] = [
     rating: 8.9,
     description: "The lives of two mob hitmen, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption."
   },
+  {
+    id: 6,
+    title: "The Shawshank Redemption",
+    poster_url: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+    year: 1994,
+    genre: "Drama",
+    rating: 9.3,
+    description: "Two imprisoned people bond over a number of years, finding solace and eventual redemption through acts of common decency."
+  },
+  {
+    id: 7,
+    title: "The Godfather",
+    poster_url: "https://image.tmdb.org/t/p/w500/eEslKSwcqmiNS6va24Pbxf2UKmJ.jpg",
+    year: 1972,
+    genre: "Crime",
+    rating: 9.2,
+    description: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son."
+  },
+  {    
+    id: 8,
+    title: "The Matrix",
+    poster_url: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+    year: 1999,
+    genre: "Sci-Fi",
+    rating: 8.7,
+    description: "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers."
+  },
+  {
+    id: 9,
+    title: "Forrest Gump",
+    poster_url: "https://image.tmdb.org/t/p/w500/saHP97rTPS5eLmrLQEcANmKrsFl.jpg",
+    year: 1994,
+    genre: "Drama",
+    rating: 8.8,
+    description: "The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama",
+  },
 ];
