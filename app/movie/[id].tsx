@@ -10,8 +10,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { icons } from "@/constants/icons";
-import useFetch from "@/services/usefetch";
-import { fetchMovieDetails } from "@/services/api";
+import { movies } from "@/data/movies"; 
 
 interface MovieInfoProps {
   label: string;
@@ -31,14 +30,12 @@ const Details = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams();
 
-  const { data: movie, loading } = useFetch(() =>
-    fetchMovieDetails(id as string)
-  );
+  const movie = movies.find((m) => m.id === Number(id));
 
-  if (loading)
+  if (!movie)
     return (
-      <SafeAreaView className="bg-primary flex-1">
-        <ActivityIndicator />
+      <SafeAreaView className="bg-primary flex-1 justify-center items-center">
+        <Text className="text-accent text-lg font-bold">Movie not found</Text>
       </SafeAreaView>
     );
 
@@ -48,7 +45,7 @@ const Details = () => {
         <View>
           <Image
             source={{
-              uri: `https://image.tmdb.org/t/p/w500${movie?.poster_path}`,
+              uri: movie.poster_url,
             }}
             className="w-full h-[550px]"
             resizeMode="stretch"
@@ -64,52 +61,22 @@ const Details = () => {
         </View>
 
         <View className="flex-col items-start justify-center mt-5 px-5">
-          <Text className="text-white font-bold text-xl">{movie?.title}</Text>
+          <Text className="text-white font-bold text-xl">{movie.title}</Text>
           <View className="flex-row items-center gap-x-1 mt-2">
             <Text className="text-light-200 text-sm">
-              {movie?.release_date?.split("-")[0]} •
+              {movie.year} {/* Рік */}
             </Text>
-            <Text className="text-light-200 text-sm">{movie?.runtime}m</Text>
           </View>
 
-          <View className="flex-row items-center bg-dark-100 px-2 py-1 rounded-md gap-x-1 mt-2">
+          <View className="flex-row items-center bg-purple-dark px-2 py-1 rounded-md gap-x-1 mt-2">
             <Image source={icons.star} className="size-4" />
 
             <Text className="text-white font-bold text-sm">
-              {Math.round(movie?.vote_average ?? 0)}/10
-            </Text>
-
-            <Text className="text-light-200 text-sm">
-              ({movie?.vote_count} votes)
+              {movie.rating}/10
             </Text>
           </View>
 
-          <MovieInfo label="Overview" value={movie?.overview} />
-          <MovieInfo
-            label="Genres"
-            value={movie?.genres?.map((g) => g.name).join(" • ") || "N/A"}
-          />
-
-          <View className="flex flex-row justify-between w-1/2">
-            <MovieInfo
-              label="Budget"
-              value={`$${(movie?.budget ?? 0) / 1_000_000} million`}
-            />
-            <MovieInfo
-              label="Revenue"
-              value={`$${Math.round(
-                (movie?.revenue ?? 0) / 1_000_000
-              )} million`}
-            />
-          </View>
-
-          <MovieInfo
-            label="Production Companies"
-            value={
-              movie?.production_companies?.map((c) => c.name).join(" • ") ||
-              "N/A"
-            }
-          />
+          <MovieInfo label="Genre" value={movie.genre} />
         </View>
       </ScrollView>
 
